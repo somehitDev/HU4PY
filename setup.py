@@ -9,7 +9,7 @@ with open("requirements.txt", "r", encoding = "utf-8") as reqr:
         for item in reqr.read().split("\n")
     ]
 
-with open("README.rst", "r", encoding = "utf-8") as rmr:
+with open("README.md", "r", encoding = "utf-8") as rmr:
     readme = rmr.read()
 
 
