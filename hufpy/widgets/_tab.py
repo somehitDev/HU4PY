@@ -6,7 +6,22 @@ from .layouts import ColumnLayout, RowLayout, StackLayout, Frame
 
 
 class Tab(ColumnLayout):
+    """
+    Tab Layout class
+    """
     def __init__(self, parent:Layout = None, id:str = None, attributes:dict = {}):
+        """
+        Tab Layout System
+
+        Parameters
+        ----------
+        parent: Layout, default None
+            parent of Tab
+        id: str, default None
+            id of Tab
+        attributes: dict, default {}
+            attributes of Tab
+        """
         super().__init__(parent, id, attributes)
         self.class_list.append("hufpy-tab")
         self.spacing = 0
@@ -21,14 +36,23 @@ class Tab(ColumnLayout):
 
     @property
     def header(self) -> RowLayout:
+        """
+        header (Tab Buttons) of Tab
+        """
         return self.__header
     
     @property
     def content(self) -> StackLayout:
+        """
+        content (Tab Items) of Tab
+        """
         return self.__content
 
     @property
     def current_index(self) -> int:
+        """
+        current index(index of visible Widget)
+        """
         return self.__content.current_index
     
     @current_index.setter
@@ -36,6 +60,9 @@ class Tab(ColumnLayout):
         self.__content.current_index = new_index
 
 class TabItem(Layout):
+    """
+    
+    """
     def __init__(self, parent:Tab):
         super().__init__(parent.header, "label", [ "hufpy-widget", "hufpy-tab-header" ], auto_attach = True)
 

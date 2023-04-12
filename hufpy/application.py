@@ -88,10 +88,41 @@ window.hufpy.createWidget("{tag_name}", "{" ".join(widget_class_list)}", "{widge
         self.app_window.evaluate_js(f'window.hufpy.deleteGlobalCss("{style_id}");')
 
 class Application:
+    """
+    hufpy Application manager
+    """
     __app_api:ApplicationAPI = None
 
     @staticmethod
-    def init(title:str = "hufpy", icon:str = None, width:int = 800, height:int = 600, x:int = None, y:int = None):
+    def init(title:str = "hufpy", icon:str = None, width:int = 800, height:int = 600, x:int = None, y:int = None) -> webview.Window:
+        """
+        Initialize and create default webview window
+
+        Parameters
+        ----------
+        title: str, default "hufpy"
+            title of main window
+        icon: str, default None
+            icon of main window
+            if windows, .ico
+            if macos, .icns
+            if linux or nuix, .png
+        width: int, default 800
+            width of main window
+        height: int, default 600
+            height of main window
+        x: int, default None
+            horizontal location(x) of main window
+            if None, center
+        y: int, default None
+            vertical location(y) of main window
+            if None, center
+
+        Return
+        ------
+        window: webview.Window
+            main window generated
+        """
         webview.initialize("cef" if sys.platform == "win32" else "cocoa" if sys.platform == "darwin" else "qt")
         app_api = ApplicationAPI()
         setattr(Application, "__app_api", app_api)
@@ -127,8 +158,20 @@ class Application:
         app_api.app_window = win
         win.events.loaded += on_window_loaded
 
+        return win
+
     @staticmethod
     def run(main_layout_class:Type[Layout], debug:bool = False):
+        """
+        Run hufpy application
+
+        Parameters
+        ----------
+        main_layout_class: Type[Layout], required
+            class of main layout to display
+        debug: bool, default False
+            flag for debug(devtool)
+        """
         def on_start():
             main_layout_class.api = getattr(Application, "__app_api")
             main_layout_class()

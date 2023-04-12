@@ -5,12 +5,30 @@ from ._base import Widget, Layout
 
 
 class Label(Widget):
-    def __init__(self, parent:Layout = None, id:str = None, attributes:dict = {}):
+    """
+    Label Widget class
+    """
+    def __init__(self, parent:Layout, id:str = None, attributes:dict = {}):
+        """
+        Label Widget (uneditable text)
+
+        Parameters
+        ----------
+        parent: Layout, required
+            parent of Label
+        id: str, default None
+            id of Label
+        attributes: dict, default {}
+            attributes of Label
+        """
         attributes["text"] = ""
         super().__init__(parent, "label", [ "hufpy-widget" ], id, attributes)
 
     @property
     def text(self) -> str:
+        """
+        text of Label
+        """
         return self.get_attribute("text")
     
     @text.setter
@@ -18,7 +36,22 @@ class Label(Widget):
         self.set_attribute("text", str(new_text))
 
 class Image(Widget):
-    def __init__(self, parent:Layout = None, id:str = None, attributes:dict = {}):
+    """
+    Image Widget class
+    """
+    def __init__(self, parent:Layout, id:str = None, attributes:dict = {}):
+        """
+        Widget to show Image
+
+        Parameters
+        ----------
+        parent: Layout, required
+            parent of Image
+        id: str, default None
+            id of Image
+        attributes: dict, default {}
+            attributes of Image
+        """
         super().__init__(parent, "div", [ "hufpy-widget-no-flex" ], id, attributes)
 
         self.repeat = False
@@ -26,6 +59,9 @@ class Image(Widget):
 
     @property
     def source(self) -> str:
+        """
+        source of Image
+        """
         return self.style.pop("background-image", "url('')")[5:-2]
     
     @source.setter
@@ -34,6 +70,9 @@ class Image(Widget):
 
     @property
     def repeat(self) -> bool:
+        """
+        flag to repeat image or not
+        """
         return self.style.pop("background-repeat", "no-repeat") != "no-repeat"
     
     @repeat.setter
@@ -42,6 +81,18 @@ class Image(Widget):
 
     @property
     def display_type(self) -> Literal["contain", "cover", "fit"]:
+        """
+        display type of showing Image
+
+        Options
+        -------
+        contain
+            resize image for fully visible
+        cover
+            resize image to cover Image Widget, crop images over Widget
+        fit
+            stretch image to size of Image Widget
+        """
         raw_type = self.style.pop("background-size", "100% 100%")
         return "fit" if raw_type == "100% 100%" else raw_type
     
