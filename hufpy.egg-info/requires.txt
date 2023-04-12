@@ -1,0 +1,10 @@
+pywebview==3.7.2
+pandas==2.0.0
+
+[:sys_platform != "win32"]
+PySide6==6.4.3
+QtPy==2.3.0
+
+[:sys_platform == "win32"]
+pythonnet==2.5.1
+cefpython3==66.1

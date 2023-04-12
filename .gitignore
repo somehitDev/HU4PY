@@ -1,0 +1,7 @@
+build
+dev_scripts
+dist
+env
+__pycache__
+
+requirements.dev.txt

@@ -1,0 +1,10 @@
+Metadata-Version: 2.1
+Name: hufpy
+Version: 0.0.1
+Home-page: https://github.com/oyajiDev/hufpy
+Author: oyajiDev
+Author-email: this.dev.somehit@gmail.com
+License: MIT license
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE

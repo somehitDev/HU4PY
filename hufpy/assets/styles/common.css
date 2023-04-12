@@ -1,0 +1,80 @@
+
+@font-face {
+    font-family: "NanumGothic";
+    src: url("../fonts/NanumGothic.ttf") format("truetype");
+    font-weight: normal;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    margin: 0px;
+    padding: 0px;
+    overflow: hidden;
+
+    font-family: "NanumGothic", serif;
+    font-size: 14px;
+}
+
+body > #hufpy-app-container {
+    width: 100%;
+    height: 100%;
+}
+/* 
+button, input {
+    font-family: inherit;
+    font-size: inherit;
+} */
+
+.hufpy-widget, .hufpy-widget-no-flex {
+    color: black;
+    background-color: white;
+    font-family: inherit;
+    font-size: inherit;
+}
+
+.hufpy-widget {
+    display: flex;
+}
+
+.hufpy-widget[data-visible="false"] {
+    display: none;
+}
+
+.huf-column-layout {
+    display: flex;
+    flex-flow: column;
+}
+
+.huf-row-layout {
+    display: flex;
+    flex-flow: row;
+}
+
+.hufpy-button {
+    display: block;
+    /* padding: 6px 12px;
+    color: black;
+    background-color: lightgray;
+    border: 1px solid black; */
+}
+
+/* .hufpy-button:active {
+    box-shadow: 0px 0px 2px 2px white inset;
+}
+
+.hufpy-button[data-toggled="true"] {
+    color: white;
+    background-color: darkgray;
+} */
+
+.hufpy-input[type="range"][orient="vertical"] {
+    display: block;
+    -webkit-appearance: slider-vertical;
+}
+
+.hufpy-tab {}
+
+.hufpy-tab-header {}
+
+.hufpy-tab-content {}
