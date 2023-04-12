@@ -1,6 +1,0 @@
-hufpy
-hufpy/assets
-hufpy/assets/fonts
-hufpy/assets/icons
-hufpy/assets/styles
-hufpy/widgets

@@ -3,5 +3,6 @@ dev_scripts
 dist
 env
 __pycache__
+hufpy.egg-info
 
 requirements.dev.txt
