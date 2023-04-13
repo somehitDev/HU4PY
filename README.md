@@ -1,11 +1,11 @@
 <div align="center">
-<img src="https://github.com/oyajiDev/hufpy/blob/master/resources/splash_transparent.png?raw=true" width="300" />
+<img src="https://github.com/oyajiDev/HU4PY/blob/master/resources/splash_transparent.png?raw=true" width="300" />
 </div>
 <hr>
 
 <div align="center">
-    <a href="https://github.com/oyajiDev/hufpy/blob/main/LICENSE">
-        <img src="https://img.shields.io/github/license/oyajiDev/hufpy.svg" alt="MIT License" />
+    <a href="https://github.com/oyajiDev/HU4PY/blob/main/LICENSE">
+        <img src="https://img.shields.io/github/license/oyajiDev/HU4PY.svg" alt="MIT License" />
     </a>
     <a href="https://pypi.org/project/hufpy/">
         <img src="https://img.shields.io/pypi/v/hufpy.svg" alt="pypi" />
@@ -22,7 +22,7 @@ python -m pip install hufpy
 
 ### - using git(dev)
 ```zsh
-python -m pip install git+https://github.com/oyajiDev/hufpy.git
+python -m pip install git+https://github.com/oyajiDev/HU4PY.git
 ```
 
 <br/><br/>
@@ -38,7 +38,7 @@ Application.Run(Frame)
 ```
 
 ### - view class
-- view class can be defined by inheriting from <a href="https://github.com/oyajiDev/hufpy/blob/master/hufpy/widgets/layouts.py">"Layout" classes</a>
+- view class can be defined by inheriting from <a href="https://github.com/oyajiDev/HU4PY/blob/master/HU4PY/widgets/layouts.py">"Layout" classes</a>
 ```python
 from hufpy.widgets.layouts import Frame
 from hufpy.widgets import Label
@@ -67,4 +67,4 @@ from hufpy.widgets import Button
         print("you clicked me!")
 ```
 
-### more example is in <a href="https://github.com/oyajiDev/hufpy/tree/master/test">"test"</a> directory
+### more example is in <a href="https://github.com/oyajiDev/HU4PY/tree/master/test">"test"</a> directory
