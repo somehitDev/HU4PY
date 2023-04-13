@@ -38,7 +38,7 @@ Application.Run(Frame)
 ```
 
 ### - view class
-- view class can be defined by inheriting from <a href="https://github.com/oyajiDev/HU4PY/blob/master/HU4PY/widgets/layouts.py">"Layout" classes</a>
+- view class can be defined by inheriting from <a href="https://github.com/oyajiDev/HU4PY/blob/master/hufpy/widgets/layouts.py">"Layout" classes</a>
 ```python
 from hufpy.widgets.layouts import Frame
 from hufpy.widgets import Label
