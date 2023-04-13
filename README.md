@@ -1,13 +1,6 @@
-<h1 align="center">
-    <br />
-    <br />
-    HUFPY
-    <sup>
-        <br />
-        <br />
-        <p style="font-size:16px;">Html Ui For PYthon</p>
-    </sup>
-</h1>
+<div align="center">
+<img src="https://github.com/oyajiDev/hufpy/blob/master/resources/splash_transparent.png?raw=true" width="250" />
+</div>
 <hr>
 
 <div align="center">
