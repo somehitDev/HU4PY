@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from typing import Literal
+from typing import List, Literal
 from ._base import Widget, Layout
 
 
@@ -8,7 +8,7 @@ class Label(Widget):
     """
     Label Widget class
     """
-    def __init__(self, parent:Layout, id:str = None, attributes:dict = {}):
+    def __init__(self, parent:Layout, id:str = None, class_list:List[str] = [], attributes:dict = {}):
         """
         Label Widget (uneditable text)
 
@@ -18,11 +18,13 @@ class Label(Widget):
             parent of Label
         id: str, default None
             id of Label
+        class_list: List[str], default []
+            class list of Label
         attributes: dict, default {}
             attributes of Label
         """
         attributes["text"] = ""
-        super().__init__(parent, "label", [ "hufpy-widget" ], id, attributes)
+        super().__init__(parent, "label", [ "hufpy-widget" ], class_list, id, attributes)
 
     @property
     def text(self) -> str:
@@ -39,7 +41,7 @@ class Image(Widget):
     """
     Image Widget class
     """
-    def __init__(self, parent:Layout, id:str = None, attributes:dict = {}):
+    def __init__(self, parent:Layout, id:str = None, class_list:List[str] = [], attributes:dict = {}):
         """
         Widget to show Image
 
@@ -49,10 +51,12 @@ class Image(Widget):
             parent of Image
         id: str, default None
             id of Image
+        class_list: List[str], default []
+            class list of Label
         attributes: dict, default {}
             attributes of Image
         """
-        super().__init__(parent, "div", [ "hufpy-widget-no-flex" ], id, attributes)
+        super().__init__(parent, "div", [ "hufpy-widget-no-flex" ], class_list, id, attributes)
 
         self.repeat = False
         self.display_type = "fit"

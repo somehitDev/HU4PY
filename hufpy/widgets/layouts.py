@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from typing import List
 from ._base import Widget, Layout
 
 
@@ -7,7 +8,7 @@ class Frame(Layout):
     """
     Frame Layout class
     """
-    def __init__(self, parent:Layout = None, id:str = None, attributes:dict = {}):
+    def __init__(self, parent:Layout = None, id:str = None, class_list:List[str] = [], attributes:dict = {}):
         """
         Frame Layout(non-flex) class
 
@@ -17,16 +18,18 @@ class Frame(Layout):
             parent of Frame
         id: str, default None
             id of Frame
+        class_list: List[str], default []
+            class list of Label
         attributes: dict, default {}
             attributes ot Frame
         """
-        super().__init__(parent, "div", [ "hufpy-widget-no-flex", "hufpy-frame" ], id, attributes)
+        super().__init__(parent, "div", [ "hufpy-widget-no-flex", "hufpy-frame" ], class_list, id, attributes)
 
 class FieldSet(Layout):
     """
     FieldSet Layout class
     """
-    def __init__(self, parent:Layout = None, id:str = None, attributes:dict = {}):
+    def __init__(self, parent:Layout = None, id:str = None, class_list:List[str] = [], attributes:dict = {}):
         """
         FieldSet Layout (same as GroupBox)
 
@@ -36,10 +39,12 @@ class FieldSet(Layout):
             parent of FieldSet
         id: str, default None
             id of FieldSet
+        class_list: List[str], default []
+            class list of Label
         attributes: dict, default {}
             attributes of FieldSet
         """
-        super().__init__(parent, "fieldset", [ "hufpy-widget-no-flex", "hufpy-fieldset" ], id, attributes)
+        super().__init__(parent, "fieldset", [ "hufpy-widget-no-flex", "hufpy-fieldset" ], class_list, id, attributes)
 
         self.__legend = Widget(self, "legend", [ "hufpy-widget-no-flex", "hufpy-fieldset-legend" ], auto_attach = True)
 
@@ -58,7 +63,7 @@ class ColumnLayout(Layout):
     """
     Column(Vertical) Layout class
     """
-    def __init__(self, parent:Layout = None, id:str = None, attributes:dict = {}):
+    def __init__(self, parent:Layout = None, id:str = None, class_list:List[str] = [], attributes:dict = {}):
         """
         Column Layout (same as VerticalBox)
 
@@ -68,11 +73,13 @@ class ColumnLayout(Layout):
             parent of ColumnLayout
         id: str, default None
             id of ColumnLayout
+        class_list: List[str], default []
+            class list of Label
         attributes: dict, default {}
             attributes of ColumnLayout
         """
         attributes["data-spacing"] = "0"
-        super().__init__(parent, "div", [ "hufpy-widget", "huf-column-layout" ], id, attributes)
+        super().__init__(parent, "div", [ "hufpy-widget", "huf-column-layout" ], class_list, id, attributes)
 
         self.__global_css_id = f"style_{self.id}"
 
@@ -96,7 +103,7 @@ class RowLayout(Layout):
     """
     Row(Horizontal) Layout class
     """
-    def __init__(self, parent:Layout = None, id:str = None, attributes:dict = {}):
+    def __init__(self, parent:Layout = None, id:str = None, class_list:List[str] = [], attributes:dict = {}):
         """
         Row Layout (same as HorizontalBox)
 
@@ -106,11 +113,13 @@ class RowLayout(Layout):
             parent of RowLayout
         id: str, default None
             id of RowLayout
+        class_list: List[str], default []
+            class list of Label
         attributes: dict, default {}
             attributes of RowLayout
         """
         attributes["data-spacing"] = "0"
-        super().__init__(parent, "div", [ "hufpy-widget", "huf-row-layout" ], id, attributes)
+        super().__init__(parent, "div", [ "hufpy-widget", "huf-row-layout" ], class_list, id, attributes)
 
         self.__global_css_id = f"style_{self.id}"
 
@@ -134,7 +143,7 @@ class StackLayout(Layout):
     """
     Stack Layout class
     """
-    def __init__(self, parent:Layout = None, id:str = None, attributes:dict = {}):
+    def __init__(self, parent:Layout = None, id:str = None, class_list:List[str] = [], attributes:dict = {}):
         """
         Stack Layout (same as headless Tab)
 
@@ -144,10 +153,12 @@ class StackLayout(Layout):
             parend of StackLayout
         id: str, default None
             id of StackLayout
+        class_list: List[str], default []
+            class list of Label
         attributes: dict, default {}
             attributes of StackLayout
         """
-        super().__init__(parent, "div", [ "hufpy-widget-no-flex", "hufpy-stack-layout" ], id, attributes)
+        super().__init__(parent, "div", [ "hufpy-widget-no-flex", "hufpy-stack-layout" ], class_list, id, attributes)
 
     @property
     def current_index(self):
@@ -168,6 +179,12 @@ class StackLayout(Layout):
             child.visible = False
 
         self.children[new_index].visible = True
+
+    def append_child(self, widget:Layout, apply_html:bool = True):
+        widget.update_style_property("width", "100%")
+        widget.update_style_property("height", "100%")
+
+        super().append_child(widget, apply_html)
 
 class Spacer(Widget):
     """

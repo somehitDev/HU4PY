@@ -1,16 +1,37 @@
 # -*- coding: utf-8 -*-
+from typing import List
 from types import MethodType
 from ._base import Widget, Layout
 
 
 class Button(Widget):
-    def __init__(self, parent:Layout = None, id:str = None, attributes:dict = {}):
-        super().__init__(parent, "button", [ "hufpy-widget", "hufpy-button" ], id, attributes)
+    """
+    Button Widget class
+    """
+    def __init__(self, parent:Layout, id:str = None, class_list:List[str] = [], attributes:dict = {}):
+        """
+        Button Widget
+
+        Parameters
+        ----------
+        parent: Layout, required
+            parent of Button
+        id: str, default None
+            id of Button
+        class_list: List[str], default []
+            class list of Label
+        attributes: dict, default {}
+            attributes of Button
+        """
+        super().__init__(parent, "button", [ "hufpy-widget", "hufpy-button" ], class_list, id, attributes)
 
         self.__on_click, self.__on_doubleclick = None, None
 
     @property
     def text(self) -> str:
+        """
+        text of Button
+        """
         return self.get_attribute("text")
     
     @text.setter
@@ -19,6 +40,11 @@ class Button(Widget):
 
     @property
     def on_clicked(self) -> MethodType:
+        """
+        clicked event of Button
+
+        event: MethodType
+        """
         return self.__on_click
     
     @on_clicked.setter
@@ -28,6 +54,11 @@ class Button(Widget):
 
     @property
     def on_double_clicked(self) -> MethodType:
+        """
+        double clicked event of Button
+
+        event: MethodType
+        """
         return self.__on_doubleclick
     
     @on_double_clicked.setter
@@ -36,8 +67,25 @@ class Button(Widget):
         self.bind_command("dblclick", "on_double_clicked")
 
 class ToggleButton(Button):
-    def __init__(self, parent:Layout = None, id:str = None, attributes:dict = {}):
-        super().__init__(parent, id, attributes)
+    """
+    ToggleButton Widget class
+    """
+    def __init__(self, parent:Layout, id:str = None, class_list:List[str] = [], attributes:dict = {}):
+        """
+        ToggleButton Widget
+
+        Parameters
+        ----------
+        parent: Layout, requried
+            parent of ToggleButton
+        id: str, default None
+            id of ToggleButton
+        class_list: List[str], default []
+            class list of Label
+        attributes: dict, default {}
+            attributes of ToggleButton
+        """
+        super().__init__(parent, id, class_list, attributes)
 
         self.set_attribute("data-toggled", "false")
         self.bind_command("click", "on_toggled", [ "data-toggled" ])
@@ -45,6 +93,9 @@ class ToggleButton(Button):
 
     @property
     def toggled(self) -> bool:
+        """
+        toggled state of ToggleButton
+        """
         return self.get_attribute("data-toggled")
     
     @toggled.setter
@@ -53,6 +104,11 @@ class ToggleButton(Button):
 
     @property
     def on_toggled(self) -> MethodType:
+        """
+        toggled event of ToggleButton
+
+        event: MethodType[bool]
+        """
         return self.__on_toggled
     
     @on_toggled.setter

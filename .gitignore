@@ -4,5 +4,6 @@ dist
 env
 __pycache__
 hufpy.egg-info
+resources/*.pxz
 
 requirements.dev.txt

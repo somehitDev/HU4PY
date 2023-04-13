@@ -7,22 +7,71 @@ from ._base import Widget, Layout
 
 
 class TableHeader(Layout):
+    """
+    Table Header Layout class
+    """
     def __init__(self, parent:"Table", id:str = None, attributes:dict = {}):
-        super().__init__(parent, "thead", [ "hufpy-widget-no-flex", "hufpy-table-header" ], id, attributes, True)
+        """
+        TableHeader (same as thead)
+
+        Parameters
+        ----------
+        parent: Table, required
+            parent Table of TableHeader
+        id: str, default None
+            id of TableHeader
+        class_list: List[str], default []
+            class list of TableHeader
+        attributes: dict, default {}
+            attributes of TableHeader
+        """
+        super().__init__(parent, "thead", [ "hufpy-widget-no-flex", "hufpy-table-header" ], [], id, attributes, True)
 
     @property
     def children(self) ->  List["TableColumn"]:
+        """
+        children of TableHeader
+
+        Return
+        ------
+        children: List[TableColumn]
+        """
         return super().children
 
 class TableBody(Layout):
+    """
+    Table Body Layout class
+    """
     def __init__(self, parent:"Table", id:str = None, attributes:dict = {}):
-        super().__init__(parent, "tbody", [ "hufpy-widget-no-flex", "hufpy-table-body" ], id, attributes, True)
+        """
+        TableBody (same as tbody)
+
+        Parameters
+        ----------
+        parent: Table, required
+            parent Table of TableBody
+        id: str, default None
+            id of TableBody
+        attributes: dict, default {}
+            attributes of TableBody
+        """
+        super().__init__(parent, "tbody", [ "hufpy-widget-no-flex", "hufpy-table-body" ], [], id, attributes, True)
 
     @property
     def children(self) -> List["TableRow"]:
+        """
+        children of TableBody
+
+        Return
+        ------
+        children: List[TableRow]
+        """
         return super().children
 
 class Table(Layout):
+    """
+    Table Layout class
+    """
     def __parse_value(self, source:str) -> Any:
         try:
             value = float(source)
@@ -50,8 +99,22 @@ class Table(Layout):
 
         return source
 
-    def __init__(self, parent:Layout = None, id:str = None, attributes:dict = {}):
-        super().__init__(parent, "table", [ "hufpy-widget-no-flex", "hufpy-table" ], id, attributes)
+    def __init__(self, parent:Layout = None, id:str = None, class_list:List[str] = [], attributes:dict = {}):
+        """
+        Table
+
+        Parameters
+        ----------
+        parent: Layout, default None
+            parent of Table
+        id: str, default None
+            id of Table
+        class_list: List[str], default []
+            class list of Table
+        attributes: dict, default {}
+            attributes of Table
+        """
+        super().__init__(parent, "table", [ "hufpy-widget-no-flex", "hufpy-table" ], class_list, id, attributes)
 
         self.__header = TableHeader(self, self.id + "_header")
         self.__body = TableBody(self, self.id + "_body")
@@ -60,14 +123,33 @@ class Table(Layout):
 
     @property
     def header(self) -> TableHeader:
+        """
+        TableHeader of Table
+
+        Return
+        ------
+        header: TableHeader
+        """
         return self.__header
     
     @property
     def body(self) -> TableBody:
+        """
+        TableBody of Table
+
+        Return
+        ------
+        body: TableBody
+        """
         return self.__body
     
     @property
     def on_clicked(self) -> MethodType:
+        """
+        clicked event of Table
+
+        event: MethodType[ridx:int, cidx:int]
+        """
         return self.__on_clicked
     
     @on_clicked.setter
@@ -86,13 +168,18 @@ class Table(Layout):
 
     @property
     def on_changed(self) -> MethodType:
+        """
+        changed event of Table
+
+        event: MethodType[ridx:int, cidx:int, value:Any]
+        """
         return self.__on_changed
     
     @on_changed.setter
     def on_changed(self, new_callback:MethodType):
         self.__on_change = new_callback
 
-    def __on_changed(self, target_item:Widget, value:str):
+    def __on_changed(self, target_item:Widget, value:Any):
         if self.__on_change:
             ridx, cidx = 0, 0
             for row_idx, row in enumerate(self.body.children):
@@ -104,6 +191,21 @@ class Table(Layout):
     
     @staticmethod
     def from_pandas(parent:Layout, source:pd.DataFrame) -> "Table":
+        """
+        create Table from pandas.DataFrame
+
+        Parameters
+        ----------
+        parent: Layout, required
+            parent of generated Table
+        source: pandas.DataFrame, required
+            source for Table
+
+        Return
+        ------
+        table: Table
+            generated Table from source
+        """
         table = Table(parent)
         if not source.empty:
             for column in source.columns:
@@ -123,6 +225,14 @@ class Table(Layout):
         return table
     
     def to_pandas(self) -> pd.DataFrame:
+        """
+        convert pandas.DataFrame from Table
+
+        Return
+        ------
+        dataframe: pandas.DataFrame
+            converted DataFrame from Table
+        """
         datas = []
         for row in self.body.children:
             data_row = []
@@ -141,6 +251,21 @@ class Table(Layout):
 
     @staticmethod
     def from_datas(parent:Layout, source:List[Dict[str, Any]]):
+        """
+        create Table from list of dictionaries
+
+        Parameters
+        ----------
+        parent: Layout, required
+            parent of generated Table
+        source: List[Dict[str, Any]], required
+            source for Table
+
+        Return
+        ------
+        table: Table
+            generated Table from source
+        """
         table = Table(parent)
         if len(source) > 0:
             for column in source[0].keys():
@@ -160,6 +285,14 @@ class Table(Layout):
         return table
     
     def to_datas(self) -> List[Dict[str, Any]]:
+        """
+        convert list of dictionaries from Table
+
+        Return
+        ------
+        datas: List[Dict[str, Any]]
+            converted data from Table
+        """
         datas = []
         for row in self.body.children:
             data_row = {}
@@ -176,13 +309,33 @@ class Table(Layout):
 
         return datas
 
-class TableColumn(Layout):
-    def __init__(self, parent:Table = None, id:str = None, attributes:dict = {}):
-        super().__init__(parent.header, "th", [ "hufpy-widget-no-flex", "hufpy-table-column" ], id, attributes)
+class TableColumn(Widget):
+    """
+    Table Column Widget class
+    """
+    def __init__(self, parent:Table, id:str = None, class_list:List[str] = [], attributes:dict = {}):
+        """
+        TableColumn (same as th)
+
+        Parameters
+        ----------
+        parent: Table, required
+            parent Table of TableColumn
+        id: str, default None
+            id of TableColumn
+        class_list: List[str], default []
+            class list of TableColumn
+        attributes: dict, default {}
+            attributes of TableColumn
+        """
+        super().__init__(parent.header, "th", [ "hufpy-widget-no-flex", "hufpy-table-column" ], class_list, id, attributes)
         parent.header.append_child(self)
 
     @property
     def title(self) -> str:
+        """
+        title of TableColumn
+        """
         return self.get_attribute("text")
     
     @title.setter
@@ -191,6 +344,20 @@ class TableColumn(Layout):
 
     @property
     def horizontal_align(self) -> Literal["default", "left", "center", "right"]:
+        """
+        horizontal alignment of widget content
+
+        Options
+        -------
+        default
+            default state, same as left
+        left
+            set content align to left
+        center
+            set content align to center
+        right
+            set content align to right
+        """
         return self.style.pop("text-align", "default")
 
     @horizontal_align.setter
@@ -205,27 +372,75 @@ class TableColumn(Layout):
         raise DeprecationWarning("")
 
 class TableRow(Layout):
-    def __init__(self, parent:Table = None, id:str = None, attributes:dict = {}):
-        super().__init__(parent.body, "tr", [ "hufpy-widget-no-flex", "hufpy-table-row" ], id, attributes, True)
+    """
+    Table Row Layout class
+    """
+    def __init__(self, parent:Table, id:str = None, class_list:List[str] = [], attributes:dict = {}):
+        """
+        TableRow (same as tr)
+
+        Parameters
+        ----------
+        parent: Table, requried
+            parent Table of TableRow
+        id: str, default None
+            id of TableRow
+        class_list: List[str], default []
+            class list of TableRow
+        attributes: dict, default {}
+            attributes of TableRow
+        """
+        super().__init__(parent.body, "tr", [ "hufpy-widget-no-flex", "hufpy-table-row" ], class_list, id, attributes, True)
 
         self.__table = parent
 
     @property
     def children(self) -> List["TableItem"]:
+        """
+        children of TableRow
+
+        Return
+        ------
+        children: List[TableItem]
+        """
         return super().children
     
     def append_child(self, widget:Widget, apply_html:bool = True):
+        """
+        append widget to layout
+
+        Parameters
+        ----------
+        widget: Widget or Layout, required
+            widget to append
+        apply_html: bool, default True
+            flag to attach element to Layout
+        """
         widget.bind_command("click", "on_clicked", [ "self" ], self.__table.id)
         widget.bind_command("change", "on_changed", [ "self", "value" ], self.__table.id)
 
         super().append_child(widget, apply_html)
 
 class TableItem(Widget):
+    """
+    Table Item Widget class
+    """
     def __init__(self, parent:TableRow):
+        """
+        TableItem (same as td)
+
+        Parameters
+        ----------
+        parent: TableRow
+            parent TableRow of TableItem
+        """
         super().__init__(parent, "td", [ "hufpy-widget-no-flex", "hufpy-table-item" ])
 
     @property
     def text(self) -> str:
+        """
+        text of TableItem
+        """
         return self.get_attribute("text")
     
     @text.setter
@@ -234,6 +449,20 @@ class TableItem(Widget):
 
     @property
     def horizontal_align(self) -> Literal["default", "left", "center", "right"]:
+        """
+        horizontal alignment of widget content
+
+        Options
+        -------
+        default
+            default state, same as left
+        left
+            set content align to left
+        center
+            set content align to center
+        right
+            set content align to right
+        """
         return self.style.pop("text-align", "default")
 
     @horizontal_align.setter

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from typing import List
 from types import MethodType
 from ._base import Layout
 from .layouts import ColumnLayout, RowLayout, StackLayout, Frame
@@ -9,7 +10,7 @@ class Tab(ColumnLayout):
     """
     Tab Layout class
     """
-    def __init__(self, parent:Layout = None, id:str = None, attributes:dict = {}):
+    def __init__(self, parent:Layout = None, id:str = None, class_list:List[str] = [], attributes:dict = {}):
         """
         Tab Layout System
 
@@ -19,18 +20,20 @@ class Tab(ColumnLayout):
             parent of Tab
         id: str, default None
             id of Tab
+        class_list: List[str], default []
+            class list of Label
         attributes: dict, default {}
             attributes of Tab
         """
-        super().__init__(parent, id, attributes)
+        super().__init__(parent, id, class_list, attributes)
         self.class_list.append("hufpy-tab")
         self.spacing = 0
 
-        self.__header = RowLayout(self, self.id + "_header")
+        self.__header = RowLayout(self, self.id + "_header", [ "hufpy-tab-header" ])
         self.__header.spacing = 5
         self.append_child(self.__header)
 
-        self.__content = StackLayout(self, self.id + "_content")
+        self.__content = StackLayout(self, self.id + "_content", [ "hufpy-tab-content" ])
         self.__content.stretch = True
         self.append_child(self.__content)
 
@@ -61,7 +64,7 @@ class Tab(ColumnLayout):
 
 class TabItem(Layout):
     """
-    
+    TabItem Widget class
     """
     def __init__(self, parent:Tab):
         super().__init__(parent.header, "label", [ "hufpy-widget", "hufpy-tab-header" ], auto_attach = True)
@@ -75,6 +78,9 @@ class TabItem(Layout):
 
     @property
     def title(self) -> str:
+        """
+        title of TabItem
+        """
         return self.get_attribute("text")
     
     @title.setter
@@ -83,6 +89,9 @@ class TabItem(Layout):
 
     @property
     def content(self) -> Layout:
+        """
+        content of TabItem
+        """
         return self.__tab_root.content.children[self.parent.children.index(self)]
 
     @content.setter
@@ -106,6 +115,9 @@ class TabItem(Layout):
 
     @property
     def on_clicked(self) -> MethodType:
+        """
+        clicked event of TabItem(cannot set)
+        """
         return self.__on_clicked
 
     def __on_clicked(self):

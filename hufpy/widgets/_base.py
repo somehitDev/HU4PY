@@ -68,7 +68,7 @@ class Widget:
     api:"hufpy.application.ApplicationAPI" = None
     widget_type:str = "widget"
 
-    def __init__(self, parent:"Layout", tag_name:str, widget_class_list:List[str] = [], widget_id:str = None, widget_attributes:dict = {}, auto_attach:bool = False):
+    def __init__(self, parent:"Layout", tag_name:str, widget_class_list:List[str] = [], additional_class_list:List[str] = [], widget_id:str = None, widget_attributes:dict = {}, auto_attach:bool = False):
         """
         Create Widget and connect to webview api system
 
@@ -80,6 +80,8 @@ class Widget:
             html tag to create
         widget_class_list: List[str], default []
             class list of html object
+        additional_class_list: List[str], default []
+            additional class list of html object
         widget_id: str, default None
             id of widget
             if None, generate id from create_widget_id function
@@ -91,7 +93,7 @@ class Widget:
         self.__parent = parent
         self.api = parent.api if parent else self.__class__.api if self.__class__.api else None
         self.__id = widget_id if widget_id else create_widget_id(self.__class__.__name__)
-        self.__class_list = widget_class_list
+        self.__class_list = list(set(widget_class_list + additional_class_list))
 
         if parent:
             parent.children.append(self)
@@ -449,7 +451,7 @@ class Layout(Widget):
     """
     widget_type:str = "layout"
 
-    def __init__(self, parent:Union["Layout", webview.Window], tag_name:str, widget_class_list:List[str] = [], widget_id:str = None, widget_attributes:dict = {}, auto_attach:bool = False):
+    def __init__(self, parent:Union["Layout", webview.Window], tag_name:str, widget_class_list:List[str] = [], additional_class_list:List[str] = [], widget_id:str = None, widget_attributes:dict = {}, auto_attach:bool = False):
         """
         Create Layout and connect to webview api system
 
@@ -461,6 +463,8 @@ class Layout(Widget):
             html tag to create
         widget_class_list: List[str], default []
             class list of html object
+        additional_class_list: List[str], default []
+            additional class list of html object
         widget_id: str, default None
             id of widget
             if None, generate id from create_widget_id function
@@ -469,7 +473,7 @@ class Layout(Widget):
         auto_attach: bool, default False
             flag to append widget to parent's children
         """
-        super().__init__(parent, tag_name, widget_class_list, widget_id, widget_attributes, True if auto_attach or isinstance(parent, webview.Window) else False)
+        super().__init__(parent, tag_name, widget_class_list, additional_class_list, widget_id, widget_attributes, True if auto_attach or isinstance(parent, webview.Window) else False)
 
         self.__children:List[Widget] = []
 
