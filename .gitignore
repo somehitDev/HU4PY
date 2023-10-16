@@ -1,9 +1,7 @@
-build
-dev_scripts
-dist
+.vscode
 env
 __pycache__
-hufpy.egg-info
-resources/*.pxz
+*.egg-info
 
+._*
 requirements.dev.txt

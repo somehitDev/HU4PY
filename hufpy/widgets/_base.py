@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import uuid, hufpy, webview
-from typing import List, Any, Literal, Union
+from typing import List, Dict, Any, Literal, Union
+from .. import _shared
 
 
 def create_widget_id(widget_py_class_name:str) -> str:
@@ -33,6 +34,9 @@ class WidgetClassManager:
         self.__widget_id = widget_id
         self.__api = api
 
+    def __str__(self) -> str:
+        return self.__class_list.__str__()
+
     def append(self, class_name:str):
         """
         append class to widget
@@ -61,6 +65,17 @@ class WidgetClassManager:
             # self.__api.app_window.evaluate_js(f'document.querySelector("#{self.__widget_id}").classList.remove("{self.__class_list}");')
             self.__api.app_window.evaluate_js(f'window.hufpy.$widgets["{self.__widget_id}"].classList.remove("{self.__class_list}");')
 
+class Body:
+    id = "body"
+    api:"hufpy.application.ApplicationAPI" = None
+    children:List["Widget"] = []
+
+    def show_modal_background(self):
+        self.api.app_window.evaluate_js(f'document.querySelector("body > .hufpy-modal-background").setAttribute("data-visible", "true");')
+
+    def close_modal_background(self):
+        self.api.app_window.evaluate_js(f'document.querySelector("body > .hufpy-modal-background").setAttribute("data-visible", "false");')
+
 class Widget:
     """
     Base Widget class of hufpy system
@@ -68,7 +83,7 @@ class Widget:
     api:"hufpy.application.ApplicationAPI" = None
     widget_type:str = "widget"
 
-    def __init__(self, parent:"Layout", tag_name:str, widget_class_list:List[str] = [], additional_class_list:List[str] = [], widget_id:str = None, widget_attributes:dict = {}, auto_attach:bool = False):
+    def __init__(self, parent:Union["Layout", "hufpy.widgets.Window"], tag_name:str, widget_class_list:List[str] = [], additional_class_list:List[str] = [], widget_id:str = None, widget_attributes:dict = {}, auto_attach:bool = False):
         """
         Create Widget and connect to webview api system
 
@@ -91,15 +106,17 @@ class Widget:
             flag to append widget to parent's children
         """
         self.__parent = parent
-        self.api = parent.api if parent else self.__class__.api if self.__class__.api else None
+        # self.api = parent.api if parent else self.__class__.api if self.__class__.api else None
+        self.api = parent.api if parent else _shared.application_api
         self.__id = widget_id if widget_id else create_widget_id(self.__class__.__name__)
         self.__class_list = list(set(widget_class_list + additional_class_list))
+        self.__additional_styles:Dict[str, Dict[str, str]] = {}
 
         if parent:
             parent.children.append(self)
 
         if self.api:
-            self.api.create_widget(tag_name, widget_class_list, self, widget_attributes, parent, auto_attach)
+            self.api.create_widget(tag_name, self.__class_list, self, widget_attributes, parent, auto_attach)
             if parent and auto_attach:
                 parent.append_child(self, True)
 
@@ -117,6 +134,10 @@ class Widget:
     def id(self, new_id:str):
         self.__id = new_id
         self.set_attribute("id", new_id)
+
+    @property
+    def _global_style_id(self) -> str:
+        return f"style_{self.id}"
 
     @property
     def class_list(self) -> WidgetClassManager:
@@ -146,18 +167,44 @@ class Widget:
         """
         style of widget
         """
-        return self.api.get_widget_attribute(self.id, "style")
+        return self.get_attribute("style")
     
     @style.setter
     def style(self, new_style:dict):
-        self.api.set_widget_attribute(self.id, "style", new_style)
+        self.set_attribute("style", new_style)
+
+    def get_additional_style(self, style_type:str, name:str = None) -> Union[Dict[str, str], str]:
+        if style_type in self.__additional_styles.keys():
+            if name:
+                if name in self.__additional_styles[style_type].keys():
+                    return self.__additional_styles[style_type][name]
+                else:
+                    return ""
+            else:
+                return self.__additional_styles[style_type]
+        else:
+            return {}
+
+    def set_additional_style(self, style_type:str, style:dict, update_to_html:bool = True):
+        if style_type in self.__additional_styles.keys():
+            self.__additional_styles[style_type].update(style)
+        else:
+            self.__additional_styles[style_type] = style
+
+        if update_to_html:
+            self.api.delete_global_css(self._global_style_id)
+            self.api.add_global_css(self._global_style_id, """
+#""" + self.id + """:""" + style_type + """ {
+""" + "\n".join([ f"    {key}: {value}" for key, value in self.__additional_styles[style_type].items() ]) + """
+}
+""")
 
     @property
     def width(self) -> int:
         """
         width of widget
         """
-        return int(self.style.pop("width", self.get_attribute("width"))[:-2])
+        return int(self.style.pop("width")[:-2])
 
     @width.setter
     def width(self, new_width:int):
@@ -168,7 +215,7 @@ class Widget:
         """
         height of widget
         """
-        return int(self.style.pop("height", self.get_attribute("height"))[:-2])
+        return int(self.style.pop("height")[:-2])
     
     @height.setter
     def height(self, new_height:int):
@@ -195,6 +242,42 @@ class Widget:
     @background.setter
     def background(self, new_background:str):
         self.update_style_property("background-color", new_background)
+
+    @property
+    def border(self) -> Dict[str, Any]:
+        return self.style["border"]
+    
+    @border.setter
+    def border(self, new_border:Dict[str, Any]):
+        # old_border = { "width": 0, "style": "", "color": "", "radius": 0 }
+        # old_border.update(self.border)
+        old_border = self.border
+        old_border.update(new_border)
+        self.update_style_property("border", old_border)
+
+    @property
+    def margin(self) -> Dict[str, int]:
+        return self.style["margin"]
+    
+    @margin.setter
+    def margin(self, new_margin:Dict[str, int]):
+        # old_margin = { "left": 0, "right": 0, "top": 0, "bottom": 0 }
+        # old_margin.update(self.margin)
+        old_margin = self.margin
+        old_margin.update(new_margin)
+        self.update_style_property("margin", old_margin)
+
+    @property
+    def padding(self) -> Dict[str, int]:
+        return self.style["padding"]
+    
+    @padding.setter
+    def padding(self, new_padding:Dict[str, int]):
+        # old_padding = { "left": 0, "right": 0, "top": 0, "bottom": 0 }
+        # old_padding.update(self.padding)
+        old_padding = self.padding
+        old_padding.update(new_padding)
+        self.update_style_property("padding", old_padding)
 
 
     @property
@@ -451,7 +534,7 @@ class Layout(Widget):
     """
     widget_type:str = "layout"
 
-    def __init__(self, parent:Union["Layout", webview.Window], tag_name:str, widget_class_list:List[str] = [], additional_class_list:List[str] = [], widget_id:str = None, widget_attributes:dict = {}, auto_attach:bool = False):
+    def __init__(self, parent:Union["Layout", "hufpy.widgets.Window", "hufpy.widgets.Dialog"], tag_name:str, widget_class_list:List[str] = [], additional_class_list:List[str] = [], widget_id:str = None, widget_attributes:dict = {}, auto_attach:bool = False):
         """
         Create Layout and connect to webview api system
 

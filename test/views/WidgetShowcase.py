@@ -14,7 +14,8 @@ if sys.platform == "win32":
     from hufpy.widgets.inputs import DirectoryInput
 
 from hufpy.widgets import (
-    Label, Image, Button, ToggleButton
+    Label, Image, Button, ToggleButton,
+    Window, Dialog
 )
 
 
@@ -177,6 +178,7 @@ class WidgetShowcase(ColumnLayout):
 
         btn = Button(row_button)
         btn.text = "button"
+        # btn.border = { "width": 1, "style": "solid", "color": "red" }
         btn.on_clicked = self.on_btn_clicked
         row_button.append_child(btn)
 
@@ -233,6 +235,16 @@ class WidgetShowcase(ColumnLayout):
 
     def on_btn_clicked(self):
         print("button clicked!")
+
+        win = Window()
+        win.title = "test window"
+        win.show()
+
+        dlg = Dialog(win)
+        dlg.title = "test dialog"
+        dlg.width = 100
+        dlg.height = 100
+        dlg.show()
 
     def on_btn_toggled(self, state:bool):
         print("toggle button: ", state)

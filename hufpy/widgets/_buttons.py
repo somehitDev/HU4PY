@@ -23,9 +23,10 @@ class Button(Widget):
         attributes: dict, default {}
             attributes of Button
         """
-        super().__init__(parent, "button", [ "hufpy-widget", "hufpy-button" ], class_list, id, attributes)
+        super().__init__(parent, "button", [ "hufpy-widget-no-flex", "hufpy-button" ], class_list, id, attributes)
 
         self.__on_click, self.__on_doubleclick = None, None
+        self.set_additional_style("active", {}, False)
 
     @property
     def text(self) -> str:
@@ -37,6 +38,22 @@ class Button(Widget):
     @text.setter
     def text(self, new_text:str):
         self.set_attribute("text", str(new_text))
+
+    @property
+    def active_foreground(self) -> str:
+        return self.get_additional_style("active", "foreground")
+    
+    @active_foreground.setter
+    def active_foreground(self, new_foreground:str):
+        self.set_additional_style("active", { "foreground": new_foreground })
+
+    @property
+    def active_background(self) -> str:
+        return self.get_additional_style("active", "background")
+    
+    @active_background.setter
+    def active_background(self, new_background:str):
+        self.set_additional_style("active", { "background": new_background })
 
     @property
     def on_clicked(self) -> MethodType:

@@ -60,7 +60,7 @@ ${styleContent}
 
         // parent.appendChild(element);
         this.$widgets[widgetId] = element;
-        if (parentId == "hufpy-app-container" || autoAttach) {
+        if ([ "body", "hufpy-app-container" ].includes(parentId) || autoAttach) {
             parent.appendChild(element);
         }
 
@@ -98,24 +98,43 @@ ${styleContent}
         }
         else if (name == "style") {
             var raw_style = element.getAttribute("style");
-            if (raw_style == null) {
-                return {};
-            }
-            else {
-                var return_style = {};
+            var return_style = {};
+            if (![ "", null ].includes(raw_style)) {
                 for (var style_item of raw_style.slice(0, -1).split(";")) {
                     var split = style_item.split(":");
-                    return_style[split[0].trim()] = split[1].trim();
+                    if (![ "border", "margin", "padding" ].includes(split[0].trim())) {
+                        return_style[split[0].trim()] = split[1].trim();
+                    }
                 }
-
-                return return_style;
             }
-        }
-        else if (name == "width") {
-            return `${element.clientWidth}px`;
-        }
-        else if (name == "height") {
-            return `${element.clientHeight}px`;
+
+            if (return_style["width"] == undefined && element.clientWidth != 0) {
+                return_style["width"] = `${element.clientWidth}px`;
+            }
+            if (return_style["height"] == undefined && element.clientHeight != 0) {
+                return_style["height"] = `${element.clientHeight}px`
+            }
+
+            return_style["border"] = {
+                "width": element.style.borderWidth == "" ? "" : parseInt(element.style.borderWidth.slice(0, -2)),
+                "style": element.style.borderStyle,
+                "color": element.style.borderColor,
+                "radius": element.style.borderRadius == "" ? "" : parseInt(element.style.borderRadius.slice(0, -2))
+            }
+            return_style["margin"] = {
+                left: element.style.marginLeft == "" ? "" : parseInt(element.style.marginLeft.slice(0, -2)),
+                right: element.style.marginRight == "" ? "" : parseInt(element.style.marginRight.slice(0, -2)),
+                top: element.style.marginTop == "" ? "" : parseInt(element.style.marginTop.slice(0, -2)),
+                bottom: element.style.marginBottom == "" ? "" : parseInt(element.style.marginBottom.slice(0, -2))
+            };
+            return_style["padding"] = {
+                left: element.style.paddingLeft == "" ? "" : parseInt(element.style.paddingLeft.slice(0, -2)),
+                right: element.style.paddingRight == "" ? "" : parseInt(element.style.paddingRight.slice(0, -2)),
+                top: element.style.paddingTop == "" ? "" : parseInt(element.style.paddingTop.slice(0, -2)),
+                bottom: element.style.paddingBottom == "" ? "" : parseInt(element.style.paddingBottom.slice(0, -2))
+            };
+
+            return return_style;
         }
         else {
             return element.getAttribute(name);
@@ -129,9 +148,21 @@ ${styleContent}
 
     $setWidgetAttribute(element, name, value) {
         if (name == "id") {
+            var globalStyle = document.querySelector(`#style_${element.id}`);
+
             delete this.$widgets[element.id];
+            var exist_events = this.$events[element.id];
+
             element.id = value;
+
             this.$widgets[value] = element;
+            if (exist_events != null) {
+                this.$events[value] = exist_events;
+            }
+
+            if (globalStyle != null) {
+                globalStyle.id = `style_${value}`
+            }
         }
         else if (name == "text") {
             element.innerText = value;
@@ -145,9 +176,51 @@ ${styleContent}
         else if (name == "style") {
             var style_attr = "";
             for (var key in value) {
-                style_attr += `${key}:${value[key]};`;
+                if (![ "border", "margin", "padding" ].includes(key)) {
+                    style_attr += `${key}:${value[key]};`;
+                }
+                // if (key == "border") {
+                //     element.style.borderWidth = `${value[key]["width"]}px`;
+                //     element.style.borderStyle = value[key]["style"];
+                //     element.style.borderColor = value[key]["color"];
+                //     element.style.borderRadius = `${value[key]["radius"]}px`;
+                // }
+                // else if (key == "margin") {
+                //     element.style.marginLeft = `${value[key]["left"]}px`;
+                //     element.style.marginRight = `${value[key]["right"]}px`;
+                //     element.style.marginTop = `${value[key]["top"]}px`;
+                //     element.style.marginBottom = `${value[key]["bottom"]}px`;
+                // }
+                // else if (key == "padding") {
+                //     element.style.paddingLeft = `${value[key]["left"]}px`;
+                //     element.style.paddingRight = `${value[key]["right"]}px`;
+                //     element.style.paddingTop = `${value[key]["top"]}px`;
+                //     element.style.paddingBottom = `${value[key]["bottom"]}px`;
+                // }
             }
             element.setAttribute("style", style_attr);
+
+            // if (value["width"] != undefined) {
+            //     element.style.width = value["width"];
+            // }
+            // if (value["height"] != undefined) {
+            //     element.style.height = value["height"];
+            // }
+
+            element.style.borderWidth = `${value["border"]["width"]}px`;
+            element.style.borderStyle = value["border"]["style"];
+            element.style.borderColor = value["border"]["color"];
+            element.style.borderRadius = `${value["border"]["radius"]}px`;
+
+            element.style.marginLeft = `${value["margin"]["left"]}px`;
+            element.style.marginRight = `${value["margin"]["right"]}px`;
+            element.style.marginTop = `${value["margin"]["top"]}px`;
+            element.style.marginBottom = `${value["margin"]["bottom"]}px`;
+
+            element.style.paddingLeft = `${value["padding"]["left"]}px`;
+            element.style.paddingRight = `${value["padding"]["right"]}px`;
+            element.style.paddingTop = `${value["padding"]["top"]}px`;
+            element.style.paddingBottom = `${value["padding"]["bottom"]}px`;
 
             // for (var key in value) {
             //     element.style[key] = value;
@@ -248,6 +321,9 @@ ${styleContent}
             for (var callArg of callArgs) {
                 if (callArg == "self") {
                     respArgs.push(`self.widgets["${widgetId}"]`);
+                }
+                else if (callArg == "ev" || callArg == "event") {
+                    respArgs.push(ev);
                 }
                 else {
                     respArgs.push(self.$getWidgetAttribute(ev.target, callArg));

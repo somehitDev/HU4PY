@@ -81,8 +81,6 @@ class ColumnLayout(Layout):
         attributes["data-spacing"] = "0"
         super().__init__(parent, "div", [ "hufpy-widget", "huf-column-layout" ], class_list, id, attributes)
 
-        self.__global_css_id = f"style_{self.id}"
-
     @property
     def spacing(self) -> int:
         """
@@ -93,9 +91,9 @@ class ColumnLayout(Layout):
     @spacing.setter
     def spacing(self, new_spacing:int):
         self.set_attribute("data-spacing", new_spacing)
-        self.api.add_global_css(self.__global_css_id, f"""
+        self.api.add_global_css(self._global_style_id, f"""
 #""" + self.id + """ > *:not([style*="display: none"]):not(:last-child) {
-    margin-bottom: """ + str(new_spacing) + """px
+    margin-bottom: """ + str(new_spacing) + """px !important
 }
 """)
 
@@ -121,8 +119,6 @@ class RowLayout(Layout):
         attributes["data-spacing"] = "0"
         super().__init__(parent, "div", [ "hufpy-widget", "huf-row-layout" ], class_list, id, attributes)
 
-        self.__global_css_id = f"style_{self.id}"
-
     @property
     def spacing(self) -> int:
         """
@@ -133,9 +129,9 @@ class RowLayout(Layout):
     @spacing.setter
     def spacing(self, new_spacing:int):
         self.set_attribute("data-spacing", new_spacing)
-        self.api.add_global_css(self.__global_css_id, f"""
+        self.api.add_global_css(self._global_style_id, f"""
 #""" + self.id + """ > *:not(:last-child) {
-    margin-right: """ + str(new_spacing) + """px
+    margin-right: """ + str(new_spacing) + """px !important
 }
 """)
 

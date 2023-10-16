@@ -66,7 +66,7 @@ class TextInput(_Input):
             attributes of TextInput
         """
         attributes["type"] = "text"
-        super().__init__(parent, id, [ "hufpy-text-input" ] + class_list, attributes)
+        super().__init__(parent, id, [ "hufpy-textinput" ] + class_list, attributes)
 
         self.bind_command("change", "on_changed", [ "value" ])
         self.__on_change = None

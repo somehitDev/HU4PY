@@ -2,8 +2,8 @@
 import os, sys, webview, json
 from ast import literal_eval
 from typing import Dict, List, Any, Type
-from .widgets._base import Layout, Widget
-from . import __path__
+from .widgets._base import Layout, Widget, Body
+from . import __path__, _shared
 
 
 class ApplicationAPI:
@@ -92,6 +92,7 @@ class Application:
     hufpy Application manager
     """
     __app_api:ApplicationAPI = None
+    body:Body = Body()
 
     @staticmethod
     def init(title:str = "hufpy", icon:str = None, width:int = 800, height:int = 600, x:int = None, y:int = None) -> webview.Window:
@@ -124,11 +125,15 @@ class Application:
             main window generated
         """
         webview.initialize("cef" if sys.platform == "win32" else "cocoa" if sys.platform == "darwin" else "qt")
-        app_api = ApplicationAPI()
-        setattr(Application, "__app_api", app_api)
+        # Application.body.api = app_api = ApplicationAPI()
+        _shared.application_body = Body()
+        _shared.application_api = _shared.application_body.api = app_api = ApplicationAPI()
+        # setattr(Application, "__app_api", app_api)
 
         def on_window_loaded():
-            win.load_css(os.path.join(__path__[0], "assets", "styles", f"{sys.platform}.css"))
+            with open(os.path.join(__path__[0], "assets", "styles", f"{sys.platform}.css"), "r", encoding = "utf-8") as cr:
+                win.load_css(cr.read())
+
             gui_win = win.gui.BrowserView.instances[win.uid]
 
             if sys.platform == "win32":
@@ -173,7 +178,8 @@ class Application:
             flag for debug(devtool)
         """
         def on_start():
-            main_layout_class.api = getattr(Application, "__app_api")
+            # main_layout_class.api = getattr(Application, "__app_api")
+            # main_layout_class.api = Application.body.api
             main_layout_class()
 
         webview.start(on_start, debug = debug)

@@ -1,0 +1,225 @@
+
+input, button, select {
+    color: inherit;
+    border-radius: 5px;
+}
+
+input[type="file"] {
+    border: none;
+}
+
+.hufpy-button[data-toggled="true"] {
+    background-color: #155FD3;
+}
+
+.hufpy-window {
+    border-radius: 10px;
+}
+
+.hufpy-window-titlebar {
+    font-size: 10px;
+    height: 18px;
+}
+
+.hufpy-window-titlebar-label {
+    background-color: transparent;
+}
+
+.hufpy-window-titlebar-closebutton {
+    color: #FC4748;
+    background-color: #FC4748;
+    border: none;
+    border-radius: 15px;
+    font-size: 9px;
+
+    width: 10px;
+    height: 10px;
+    margin-top: 3px;
+    margin-left: 4px;
+    padding: 0px;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        color: white;
+        background-color: #1E1E1E;
+    }
+
+    input, button, select {
+        border: 1px solid #1B1B1B;
+    }
+
+    .hufpy-button {
+        color: white;
+        background-color: #4D4D4D;
+    }
+    
+    .hufpy-button:active {
+        background-color: #646464;
+    }
+    
+    .hufpy-button[data-toggled="false"] {
+        color: white;
+        background-color: #252525;
+    }
+    
+    
+    .hufpy-textinput {
+        color: #2E2E2E;
+        background-color: #000000;
+        border: 1px solid #000000;
+    }
+    
+    .hufpy-textinput:focus {
+        color: #363636;
+        background-color: #1D1D1D;
+        border-color: #678BE0;
+    }
+    
+    .hufpy-range {
+        background-color: #323232;
+    }
+    
+    .hufpy-combobox {
+        background-color: #4D4D4D;
+    }
+    
+    .hufpy-combobox:acitve {
+        background-color: #2D2D2D;
+    }
+    
+    
+    .hufpy-window, .hufpy-dialog {
+        border: 1px solid #5F5F5F;
+    }
+    
+    .hufpy-window-titlebar {
+        color: #A5A5A5;
+        background-color: #2A2A2A;
+        border-bottom: 1px solid #0D0D0D;
+    }
+    
+    .hufpy-window-titlebar-label {
+        background-color: transparent;
+    }
+    
+    .hufpy-window-titlebar-closebutton {
+        color: #FC4748;
+        background-color: #FC4748;
+        border: none;
+        border-radius: 15px;
+        font-size: 9px;
+    
+        width: 10px;
+        height: 10px;
+        margin-top: 3px;
+        margin-left: 4px;
+        padding: 0px;
+    }
+    
+    .hufpy-window-titlebar-closebutton:hover, .hufpy-window-titlebar-closebutton:active {
+        color: black;
+        background-color: #EB3D3D;
+    }
+
+    .hufpy-window-content {
+        background-color: #1E1E1E;
+    }
+
+    .hufpy-modal-background {
+        background-color: rgba(255, 255, 255, 0.7);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    body {
+        color: black;
+        background-color: #F4F4F4;
+    }
+
+    input, button, select {
+        border: 1px solid #BDBDBD;
+    }
+
+    .hufpy-button {
+        color: black;
+        background-color: white;
+    }
+    
+    .hufpy-button:active {
+        background-color: #ECECEC;
+    }
+    
+    .hufpy-button[data-toggled="false"] {
+        color: black;
+        background-color: #E6E6E6;
+    }
+    
+    .hufpy-button[data-toggled="true"] {
+        color: white;
+    }
+    
+    
+    .hufpy-textinput {
+        color: #A7A6A7;
+        /* background-color: #96999B; */
+        background-color: #E4E4E4;
+        border: 1px solid #9B9C9E;
+    }
+    
+    .hufpy-textinput:focus {
+        color: #818586;
+        background-color: white;
+        border-color: #678BE0;
+    }
+    
+    .hufpy-range {
+        background-color: #DFDFDF;
+    }
+    
+    .hufpy-combobox {
+        background-color: #EFEFEF;
+    }
+    
+    .hufpy-combobox:acitve {
+        background-color: white;
+    }
+    
+    
+    .hufpy-window, .hufpy-dialog {
+        border: 1px solid black;
+    }
+    
+    .hufpy-window-titlebar {
+        color: black;
+        background-color: #FBFBFB;
+        border-bottom: 1px solid #D5D5D5;
+    }
+    
+    .hufpy-window-titlebar-label {
+        background-color: transparent;
+    }
+    
+    .hufpy-window-titlebar-closebutton {
+        color: #FC4748;
+        background-color: #FC4748;
+        border: none;
+        border-radius: 15px;
+        font-size: 9px;
+    
+        width: 10px;
+        height: 10px;
+        margin-top: 3px;
+        margin-left: 4px;
+        padding: 0px;
+    }
+    
+    .hufpy-window-titlebar-closebutton:hover, .hufpy-window-titlebar-closebutton:active {
+        color: black;
+        background-color: #EB3D3D;
+    }
+
+    .hufpy-modal-background {
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+}
